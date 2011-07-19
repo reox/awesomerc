@@ -15,7 +15,7 @@ require("debian.menu")
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, and wallpapers
-beautiful.init("~/.config/awesome/theme.lua")
+beautiful.init("/home/reox/.config/awesome/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
 terminal = "x-terminal-emulator"
@@ -336,8 +336,8 @@ awful.rules.rules = {
 	  properties = { tag = tags[1][2] } },
 	{ rule = { instance = "evolution" }, 
 	  properties = { tag = tags[1][3] } },
-	{ rule = { instance = "pidgin" }, 
-	  properties = { tag = tags[1][9] } },
+	{ rule = { class = "Pidgin" }, 
+	  properties = { tag = tags[1][9] } }
     -- Set Firefox to always map on tags number 2 of screen 1.
     -- { rule = { class = "Firefox" },
     --   properties = { tag = tags[1][2] } },
