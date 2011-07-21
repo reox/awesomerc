@@ -218,7 +218,12 @@ globalkeys = awful.util.table.join(
     -- Standard program
     awful.key({ modkey,           }, "Return", function () awful.util.spawn(terminal) end),
 	awful.key({                   }, "Print",  function () awful.util.spawn("scrot -e 'mv $f ~/screenshots/ 2>/dev/null'") end),
-	--awful.key({ modkey,           }, "Print",  function () awful.util.spawn("scrot -s -e 'mv $f ~/screenshots/ 2>/dev/null'") end),
+	-- awful.key({ "Shift"           }, "Print",  function () awful.util.spawn("scrot -s -e 'mv $f ~/screenshots/ 2>/dev/null'") end),
+	-- Audio
+	awful.key({			    	  }, "#121", 		function () awful.util.spawn("amixer -c 0 sset Speaker toggle") end),
+	awful.key({					  }, "#122", 		function () awful.util.spawn("amixer -c 0 sset Master 1+") end),
+	awful.key({					  }, "#123",	  	function () awful.util.spawn("amixer -c 0 sset Master 1-") end),
+
     awful.key({ modkey, "Control" }, "r", awesome.restart),
     awful.key({ modkey, "Shift"   }, "q", awesome.quit),
 
@@ -243,6 +248,7 @@ globalkeys = awful.util.table.join(
                   awful.util.eval, nil,
                   awful.util.getdir("cache") .. "/history_eval")
               end)
+
 )
 
 clientkeys = awful.util.table.join(
