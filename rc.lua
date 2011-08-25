@@ -52,7 +52,7 @@ layouts =
 tags = {}
 for s = 1, screen.count() do
     -- Each screen has its own tag table.
-    tags[s] = awful.tag({ 1, 2, 3, 4, 5, 6, 7, 8, 9 }, s, layouts[1])
+    tags[s] = awful.tag({ "term", "www", "mail", "chat", 5, 6, 7, 8, 9 }, s, layouts[1])
 end
 
 -- console tab needs other layout:
@@ -61,9 +61,9 @@ awful.layout.set(awful.layout.suit.tile, tags[1][1])
 awful.tag.incmwfact(0.15, tags[1][1])
 
 -- pidgin tab need also other layout...
-awful.tag.viewonly(tags[1][9])
-awful.layout.set(awful.layout.suit.tile, tags[1][9])
-awful.tag.incmwfact(0.3, tags[1][9])
+awful.tag.viewonly(tags[1][4])
+awful.layout.set(awful.layout.suit.tile, tags[1][4])
+awful.tag.incmwfact(0.3, tags[1][4])
 
 -- jump back to default
 awful.tag.viewonly(tags[1][1])
@@ -363,11 +363,11 @@ awful.rules.rules = {
 	{ rule = { instance = "evolution" }, 
 	  properties = { tag = tags[1][3] } },
 	{ rule = { class = "Pidgin", role = "buddy_list" },
-	  properties = { tag = tags[1][9] },
+	  properties = { tag = tags[1][4] },
 	  callback = awful.client.setslave
 	},
 	{ rule = { class = "Pidgin", role = "conversation" },
-	  properties = { tag = tags[1][9] },
+	  properties = { tag = tags[1][4] },
 	},
 	 
     -- Set Firefox to always map on tags number 2 of screen 1.
