@@ -54,6 +54,20 @@ for s = 1, screen.count() do
     -- Each screen has its own tag table.
     tags[s] = awful.tag({ 1, 2, 3, 4, 5, 6, 7, 8, 9 }, s, layouts[1])
 end
+
+-- console tab needs other layout:
+awful.tag.viewonly(tags[1][1])
+awful.layout.set(awful.layout.suit.tile, tags[1][1])
+awful.tag.incmwfact(0.15, tags[1][1])
+
+-- pidgin tab need also other layout...
+awful.tag.viewonly(tags[1][9])
+awful.layout.set(awful.layout.suit.tile, tags[1][9])
+awful.tag.incmwfact(0.3, tags[1][9])
+
+-- jump back to default
+awful.tag.viewonly(tags[1][1])
+
 -- }}}
 
 -- {{{ Menu
@@ -150,8 +164,10 @@ for s = 1, screen.count() do
 	memwidget = widget({ type = "textbox" })
 	vicious.register(memwidget, vicious.widgets.mem, "RAM $1% ", 20)
 	-- BAT Widget
-	batwidget = widget({ type = "textbox" })
-	vicious.register(batwidget, vicious.widgets.bat, "BAT $2% $1 ", 30, "BAT0")
+	batwidget_bat1 = widget({ type = "textbox" })
+	batwidget_bat2 = widget({ type = "textbox" })
+	vicious.register(batwidget_bat1, vicious.widgets.bat, "B0$1 $2% $3 ", 30, "BAT0")
+	vicious.register(batwidget_bat2, vicious.widgets.bat, "B1$1 $2% $3 ", 30, "BAT1")
 
 
     -- Create the wibox
@@ -167,7 +183,8 @@ for s = 1, screen.count() do
         mylayoutbox[s],
         mytextclock,
 		memwidget,
-		batwidget,
+		batwidget_bat2,
+		batwidget_bat1,
         s == 1 and mysystray or nil,
         mytasklist[s],
         layout = awful.widget.layout.horizontal.rightleft
@@ -217,12 +234,13 @@ globalkeys = awful.util.table.join(
 
     -- Standard program
     awful.key({ modkey,           }, "Return", function () awful.util.spawn(terminal) end),
+	awful.key({ modkey,           }, "L"     , function () awful.util.spawn("slock") end),
 	awful.key({                   }, "Print",  function () awful.util.spawn("scrot -e 'mv $f ~/screenshots/ 2>/dev/null'") end),
 	-- awful.key({ "Shift"           }, "Print",  function () awful.util.spawn("scrot -s -e 'mv $f ~/screenshots/ 2>/dev/null'") end),
 	-- Audio
-	awful.key({			    	  }, "#121", 		function () awful.util.spawn("amixer -c 0 sset Speaker toggle") end),
-	awful.key({					  }, "#122", 		function () awful.util.spawn("amixer -c 0 sset Master 1+") end),
-	awful.key({					  }, "#123",	  	function () awful.util.spawn("amixer -c 0 sset Master 1-") end),
+	awful.key({			    	  }, "#121", 		function () awful.util.spawn("amixer -c 0 sset Speaker toggle >/dev/null 2>&1") end),
+	awful.key({					  }, "#122", 		function () awful.util.spawn("amixer -c 0 sset Master 1- >/dev/null 2>&1") end),
+	awful.key({					  }, "#123",	  	function () awful.util.spawn("amixer -c 0 sset Master 1+ >/dev/null 2>&1") end),
 
     awful.key({ modkey, "Control" }, "r", awesome.restart),
     awful.key({ modkey, "Shift"   }, "q", awesome.quit),
@@ -335,6 +353,8 @@ awful.rules.rules = {
       properties = { floating = true } },
     { rule = { class = "gimp" },
       properties = { floating = true } },
+    { rule = { class = "keepassx" },
+      properties = { floating = true } },
 	-- set some windows
 	{ rule = { instance = "xterm" }, 
 	  properties = { tag = tags[1][1] } },
@@ -342,8 +362,14 @@ awful.rules.rules = {
 	  properties = { tag = tags[1][2] } },
 	{ rule = { instance = "evolution" }, 
 	  properties = { tag = tags[1][3] } },
-	{ rule = { class = "Pidgin" }, 
-	  properties = { tag = tags[1][9] } }
+	{ rule = { class = "Pidgin", role = "buddy_list" },
+	  properties = { tag = tags[1][9] },
+	  callback = awful.client.setslave
+	},
+	{ rule = { class = "Pidgin", role = "conversation" },
+	  properties = { tag = tags[1][9] },
+	},
+	 
     -- Set Firefox to always map on tags number 2 of screen 1.
     -- { rule = { class = "Firefox" },
     --   properties = { tag = tags[1][2] } },
@@ -398,9 +424,10 @@ end
 run_once("chromium")
 run_once("pidgin")
 run_once("evolution")
+-- two times xterm :)
 run_once("xterm")
-run_once("nm-applet")
---run_once("gnome-power-manager")
+run_once("xterm")
+run_once("wicd-gtk")
 
 -- }}}
 
