@@ -9,6 +9,9 @@ require("naughty")
 
 require("vicious")
 
+-- load the bashets
+require("bashets")
+
 
 -- Load Debian menu entries
 require("debian.menu")
@@ -21,6 +24,9 @@ beautiful.init("/home/reox/.config/awesome/theme.lua")
 terminal = "x-terminal-emulator"
 editor = os.getenv("EDITOR") or "editor"
 editor_cmd = terminal .. " -e " .. editor
+
+-- bashets config
+bashets.set_script_path("/home/reox/git/bashets/userscripts/")
 
 -- Default modkey.
 -- Usually, Mod4 is the key with a logo between Control and Alt.
@@ -166,8 +172,12 @@ for s = 1, screen.count() do
 	-- BAT Widget
 	batwidget_bat1 = widget({ type = "textbox" })
 	batwidget_bat2 = widget({ type = "textbox" })
-	vicious.register(batwidget_bat1, vicious.widgets.bat, "B0$1 $2% $3 ", 30, "BAT0")
-	vicious.register(batwidget_bat2, vicious.widgets.bat, "B1$1 $2% $3 ", 30, "BAT1")
+	batwidget_time = widget({ type = "textbox" })
+
+	vicious.register(batwidget_bat1, vicious.widgets.bat, "B0$1 $2% ", 30, "BAT0")
+	vicious.register(batwidget_bat2, vicious.widgets.bat, "B1$1 $2% ", 30, "BAT1")
+	bashets.register("battery_remaining.sh", {widget = batwidget_time, update_time = 30, format="$1 xx"}) 
+
 
 
     -- Create the wibox
@@ -183,6 +193,7 @@ for s = 1, screen.count() do
         mylayoutbox[s],
         mytextclock,
 		memwidget,
+		batwidget_time,
 		batwidget_bat2,
 		batwidget_bat1,
         s == 1 and mysystray or nil,
@@ -407,6 +418,8 @@ client.add_signal("focus", function(c) c.border_color = beautiful.border_focus e
 client.add_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
 
+bashets.start()
+
 -- {{{ autostart
 
 function run_once(prg, arg_string)
@@ -435,6 +448,5 @@ run_once("wicd-gtk")
 -- {{{ Widget stuff
 
 -- Initialize widget
-
 
 -- }}}
