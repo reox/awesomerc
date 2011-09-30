@@ -9,9 +9,6 @@ require("naughty")
 
 require("vicious")
 
--- load the bashets
-require("bashets")
-
 
 -- Load Debian menu entries
 require("debian.menu")
@@ -25,8 +22,6 @@ terminal = "x-terminal-emulator"
 editor = os.getenv("EDITOR") or "editor"
 editor_cmd = terminal .. " -e " .. editor
 
--- bashets config
-bashets.set_script_path("/home/reox/git/bashets/userscripts/")
 
 -- Default modkey.
 -- Usually, Mod4 is the key with a logo between Control and Alt.
@@ -176,8 +171,7 @@ for s = 1, screen.count() do
 
 	vicious.register(batwidget_bat1, vicious.widgets.bat, "B0$1 $2% ", 30, "BAT0")
 	vicious.register(batwidget_bat2, vicious.widgets.bat, "B1$1 $2% ", 30, "BAT1")
-	bashets.register("battery_remaining.sh", {widget = batwidget_time, update_time = 30, format="$1 xx"}) 
-
+	vicious.register(batwidget_time, function() return awful.util.pread("/home/reox/git/localbin/battery_remaining.sh") end, "$2$1 ", 10)
 
 
     -- Create the wibox
@@ -418,7 +412,6 @@ client.add_signal("focus", function(c) c.border_color = beautiful.border_focus e
 client.add_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
 
-bashets.start()
 
 -- {{{ autostart
 
