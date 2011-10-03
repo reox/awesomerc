@@ -171,7 +171,7 @@ for s = 1, screen.count() do
 
 	vicious.register(batwidget_bat1, vicious.widgets.bat, "B0$1 $2% ", 30, "BAT0")
 	vicious.register(batwidget_bat2, vicious.widgets.bat, "B1$1 $2% ", 30, "BAT1")
-	vicious.register(batwidget_time, function() return awful.util.pread("/home/reox/git/localbin/battery_remaining.sh") end, "$2$1 ", 10)
+	vicious.register(batwidget_time, function() return awful.util.pread("/home/reox/git/localbin/battery_remaining.sh") end, " $2$1 ", 10)
 
 
     -- Create the wibox
