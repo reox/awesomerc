@@ -432,7 +432,7 @@ run_once("pidgin")
 run_once("evolution")
 -- two times xterm :)
 run_once("xterm")
-run_once("xterm")
+--run_once("xterm")
 run_once("wicd-gtk")
 
 -- }}}
