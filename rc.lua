@@ -66,6 +66,10 @@ awful.tag.viewonly(tags[1][4])
 awful.layout.set(awful.layout.suit.tile, tags[1][4])
 awful.tag.incmwfact(0.3, tags[1][4])
 
+-- mail need another layout
+awful.tag.viewonly(tags[1][3])
+awful.layout.set(awful.layout.suit.magnifier, tags[1][3])
+
 -- jump back to default
 awful.tag.viewonly(tags[1][1])
 
@@ -240,12 +244,12 @@ globalkeys = awful.util.table.join(
     -- Standard program
     awful.key({ modkey,           }, "Return", function () awful.util.spawn(terminal) end),
 	awful.key({ modkey,           }, "L"     , function () awful.util.spawn("slock") end),
-	awful.key({ Button3,                  }, "Print",  function () awful.util.spawn("scrot") end),
+	awful.key({ Button3,                  }, "Print",  function () awful.util.spawn("scrot", false) end),
 	-- awful.key({ "Shift"           }, "Print",  function () awful.util.spawn("scrot -s -e 'mv $f ~/screenshots/ 2>/dev/null'") end),
 	-- Audio
-	awful.key({			    	  }, "#121", 		function () awful.util.spawn("amixer -c 0 sset Speaker toggle >/dev/null 2>&1") end),
-	awful.key({					  }, "#122", 		function () awful.util.spawn("amixer -c 0 sset Master 1- >/dev/null 2>&1") end),
-	awful.key({					  }, "#123",	  	function () awful.util.spawn("amixer -c 0 sset Master 1+ >/dev/null 2>&1") end),
+	awful.key({			    	  }, "#121", 		function () awful.util.spawn("amixer -c 0 sset Speaker toggle >/dev/null 2>&1", false) end),
+	awful.key({					  }, "#122", 		function () awful.util.spawn("amixer -c 0 sset Master 1- >/dev/null 2>&1", false) end),
+	awful.key({					  }, "#123",	  	function () awful.util.spawn("amixer -c 0 sset Master 1+ >/dev/null 2>&1", false) end),
 
     awful.key({ modkey, "Control" }, "r", awesome.restart),
     awful.key({ modkey, "Shift"   }, "q", awesome.quit),
@@ -365,7 +369,7 @@ awful.rules.rules = {
 	  properties = { tag = tags[1][1] } },
 	{ rule = { instance = "chromium" }, 
 	  properties = { tag = tags[1][2] } },
-	{ rule = { instance = "evolution" }, 
+	{ rule = { class = "Icedove" }, 
 	  properties = { tag = tags[1][3] } },
 	{ rule = { class = "Pidgin", role = "buddy_list" },
 	  properties = { tag = tags[1][4] },
