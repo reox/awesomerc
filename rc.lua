@@ -240,7 +240,7 @@ globalkeys = awful.util.table.join(
     -- Standard program
     awful.key({ modkey,           }, "Return", function () awful.util.spawn(terminal) end),
 	awful.key({ modkey,           }, "L"     , function () awful.util.spawn("slock") end),
-	awful.key({                   }, "Print",  function () awful.util.spawn("scrot -e 'mv $f ~/screenshots/ 2>/dev/null'") end),
+	awful.key({ Button3,                  }, "Print",  function () awful.util.spawn("scrot") end),
 	-- awful.key({ "Shift"           }, "Print",  function () awful.util.spawn("scrot -s -e 'mv $f ~/screenshots/ 2>/dev/null'") end),
 	-- Audio
 	awful.key({			    	  }, "#121", 		function () awful.util.spawn("amixer -c 0 sset Speaker toggle >/dev/null 2>&1") end),
@@ -429,11 +429,11 @@ end
 
 run_once("chromium")
 run_once("pidgin")
-run_once("evolution")
+run_once("icedove")
 -- two times xterm :)
 run_once("xterm")
 --run_once("xterm")
-run_once("wicd-gtk")
+run_once("wicd-gtk --tray")
 
 -- }}}
 
