@@ -438,6 +438,9 @@ run_once("icedove")
 run_once("xterm")
 --run_once("xterm")
 run_once("wicd-gtk --tray")
+-- load calibration for monitor
+run_once("dispwin /home/reox/git/dispcal/2011-12-23_HIGH_Laptop.cal")
+
 
 -- }}}
 
