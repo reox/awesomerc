@@ -167,15 +167,15 @@ for s = 1, screen.count() do
 
 	-- RAM Widget
 	memwidget = widget({ type = "textbox" })
-	vicious.register(memwidget, vicious.widgets.mem, "RAM $1% ", 20)
+	vicious.register(memwidget, vicious.widgets.mem, "[ RAM $1% ]", 20)
 	-- BAT Widget
 	batwidget_bat1 = widget({ type = "textbox" })
-	batwidget_bat2 = widget({ type = "textbox" })
 	batwidget_time = widget({ type = "textbox" })
+	ipwidget = widget({ type = "textbox" })
 
-	vicious.register(batwidget_bat1, vicious.widgets.bat, "B0$1 $2% ", 30, "BAT0")
-	vicious.register(batwidget_bat2, vicious.widgets.bat, "B1$1 $2% ", 30, "BAT1")
+	vicious.register(batwidget_bat1, vicious.widgets.bat, "[ BAT $1 $2% ", 30, "BAT0")
 	vicious.register(batwidget_time, function() return awful.util.pread("/home/reox/git/localbin/battery_remaining.sh") end, " $2$1 ", 10)
+	vicious.register(ipwidget, function() return awful.util.pread("/home/reox/git/localbin/getAllIPs.sh") end, "$1 ", 10)
 
 
     -- Create the wibox
@@ -190,14 +190,22 @@ for s = 1, screen.count() do
         },
         mylayoutbox[s],
         mytextclock,
-		memwidget,
-		batwidget_time,
-		batwidget_bat2,
-		batwidget_bat1,
         s == 1 and mysystray or nil,
         mytasklist[s],
         layout = awful.widget.layout.horizontal.rightleft
     }
+
+    -- Create the wibox
+    botwibox = awful.wibox({ position = "bottom", screen = s })
+    botwibox.widgets = {
+		memwidget,
+		batwidget_time,
+		batwidget_bat2,
+		batwidget_bat1,
+		ipwidget,
+        layout = awful.widget.layout.horizontal.rightleft
+    }
+
 end
 -- }}}
 
@@ -247,9 +255,9 @@ globalkeys = awful.util.table.join(
 	awful.key({ Button3,                  }, "Print",  function () awful.util.spawn("scrot", false) end),
 	-- awful.key({ "Shift"           }, "Print",  function () awful.util.spawn("scrot -s -e 'mv $f ~/screenshots/ 2>/dev/null'") end),
 	-- Audio
-	awful.key({			    	  }, "#121", 		function () awful.util.spawn("amixer -c 0 sset Speaker toggle >/dev/null 2>&1", false) end),
-	awful.key({					  }, "#122", 		function () awful.util.spawn("amixer -c 0 sset Master 1- >/dev/null 2>&1", false) end),
-	awful.key({					  }, "#123",	  	function () awful.util.spawn("amixer -c 0 sset Master 1+ >/dev/null 2>&1", false) end),
+	awful.key({			    	  }, "#121", 		function () awful.util.spawn("volume mute", false) end),
+	awful.key({					  }, "#122", 		function () awful.util.spawn("volume voldown", false) end),
+	awful.key({					  }, "#123",	  	function () awful.util.spawn("volume volup", false) end),
 
     awful.key({ modkey, "Control" }, "r", awesome.restart),
     awful.key({ modkey, "Shift"   }, "q", awesome.quit),
@@ -440,13 +448,32 @@ run_once("xterm")
 run_once("wicd-gtk --tray")
 -- load calibration for monitor
 run_once("dispwin /home/reox/git/dispcal/2011-12-23_HIGH_Laptop.cal")
+-- set the name of the window manager, should fix jdk problems
+run_once("wmname LG3D")
+run_once("dropboxd")
 
 
 -- }}}
 
 
--- {{{ Widget stuff
+-- {{{ Widget stuff (naughty config)
+naughty.config.default_preset.timeout          = 5
+naughty.config.default_preset.screen           = 1
+naughty.config.default_preset.position         = "top_right"
+naughty.config.default_preset.margin           = 4
+naughty.config.default_preset.gap              = 1
+naughty.config.default_preset.ontop            = true
+naughty.config.default_preset.font             = beautiful.font or "Verdana 8"
+naughty.config.default_preset.icon             = nil
+naughty.config.default_preset.icon_size        = 16
+naughty.config.default_preset.fg               = beautiful.fg_focus or '#ffffff'
+naughty.config.default_preset.bg               = beautiful.bg_focus or '#535d6c'
+naughty.config.presets.normal.border_color     = beautiful.border_focus or '#535d6c'
+naughty.config.default_preset.border_width     = 1
+naughty.config.default_preset.hover_timeout    = nil
 
--- Initialize widget
+naughty.config.presets.normal.icon_size        = 32
+naughty.config.presets.low.icon_size           = 32
+naughty.config.presets.critical.icon_size      = 32
 
 -- }}}
