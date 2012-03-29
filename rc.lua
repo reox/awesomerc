@@ -172,10 +172,14 @@ for s = 1, screen.count() do
 	batwidget_bat1 = widget({ type = "textbox" })
 	batwidget_time = widget({ type = "textbox" })
 	ipwidget = widget({ type = "textbox" })
+	dnswidget = widget({ type = "textbox" })
+	backupwidget = widget({ type = "textbox" })
 
 	vicious.register(batwidget_bat1, vicious.widgets.bat, "[ BAT $1 $2% ", 30, "BAT0")
 	vicious.register(batwidget_time, function() return awful.util.pread("/home/reox/git/localbin/battery_remaining.sh") end, " $2$1 ", 10)
-	vicious.register(ipwidget, function() return awful.util.pread("/home/reox/git/localbin/getAllIPs.sh") end, "$1 ", 10)
+	vicious.register(ipwidget, function() return awful.util.pread("/home/reox/git/localbin/getAllIPs.sh") end, "$1 ", 30)
+	vicious.register(dnswidget, function() return awful.util.pread("/home/reox/git/localbin/dnsscript.sh") end, "$1 ", 30)
+	vicious.register(backupwidget, function() return awful.util.pread("/home/reox/git/localbin/backup-status") end, "$1 ", 30)
 
 
     -- Create the wibox
@@ -203,6 +207,8 @@ for s = 1, screen.count() do
 		batwidget_bat2,
 		batwidget_bat1,
 		ipwidget,
+		dnswidget,
+		backupwidget,
         layout = awful.widget.layout.horizontal.rightleft
     }
 
