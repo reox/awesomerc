@@ -7,25 +7,17 @@ require("beautiful")
 -- Notification library
 require("naughty")
 
-require("vicious")
-
-
 -- Load Debian menu entries
 require("debian.menu")
 
-
-
-  require("awesompd/awesompd")
-
 -- {{{ Variable definitions
 -- Themes define colours, icons, and wallpapers
-beautiful.init("/home/reox/.config/awesome/theme.lua")
+beautiful.init("/usr/share/awesome/themes/default/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
 terminal = "x-terminal-emulator"
 editor = os.getenv("EDITOR") or "editor"
 editor_cmd = terminal .. " -e " .. editor
-
 
 -- Default modkey.
 -- Usually, Mod4 is the key with a logo between Control and Alt.
@@ -57,26 +49,8 @@ layouts =
 tags = {}
 for s = 1, screen.count() do
     -- Each screen has its own tag table.
-    tags[s] = awful.tag({ "term", "www", "mail", "chat", 5, 6, 7, 8, 9 }, s, layouts[1])
+    tags[s] = awful.tag({ 1, 2, 3, 4, 5, 6, 7, 8, 9 }, s, layouts[1])
 end
-
--- console tab needs other layout:
-awful.tag.viewonly(tags[1][1])
-awful.layout.set(awful.layout.suit.tile, tags[1][1])
-awful.tag.incmwfact(0.15, tags[1][1])
-
--- pidgin tab need also other layout...
-awful.tag.viewonly(tags[1][4])
-awful.layout.set(awful.layout.suit.tile, tags[1][4])
-awful.tag.incmwfact(0.3, tags[1][4])
-
--- mail need another layout
-awful.tag.viewonly(tags[1][3])
-awful.layout.set(awful.layout.suit.magnifier, tags[1][3])
-
--- jump back to default
-awful.tag.viewonly(tags[1][1])
-
 -- }}}
 
 -- {{{ Menu
@@ -105,7 +79,71 @@ mytextclock = awful.widget.textclock({ align = "right" })
 -- Create a systray
 mysystray = widget({ type = "systray" })
 
--- Create a wibox for each screen and add it
+-- BEGIN OF AWESOMPD WIDGET DECLARATION
+
+  require('awesompd/awesompd')
+
+  musicwidget = awesompd:create() -- Create awesompd widget
+  musicwidget.font = "Liberation Mono" -- Set widget font 
+  musicwidget.scrolling = true -- If true, the text in the widget will be scrolled
+  musicwidget.output_size = 30 -- Set the size of widget in symbols
+  musicwidget.update_interval = 10 -- Set the update interval in seconds
+
+  -- Set the folder where icons are located (change username to your login name)
+  musicwidget.path_to_icons = "/home/username/.config/awesome/icons" 
+
+  -- Set the default music format for Jamendo streams. You can change
+  -- this option on the fly in awesompd itself.
+  -- possible formats: awesompd.FORMAT_MP3, awesompd.FORMAT_OGG
+  musicwidget.jamendo_format = awesompd.FORMAT_MP3
+  
+  -- Specify the browser you use so awesompd can open links from
+  -- Jamendo in it.
+  musicwidget.browser = "firefox"
+
+  -- If true, song notifications for Jamendo tracks and local tracks
+  -- will also contain album cover image.
+  musicwidget.show_album_cover = true
+
+  -- Specify how big in pixels should an album cover be. Maximum value
+  -- is 100.
+  musicwidget.album_cover_size = 50
+  
+  -- This option is necessary if you want the album covers to be shown
+  -- for your local tracks.
+  musicwidget.mpd_config = "/home/username/.mpdconf"
+  
+  -- Specify decorators on the left and the right side of the
+  -- widget. Or just leave empty strings if you decorate the widget
+  -- from outside.
+  musicwidget.ldecorator = " "
+  musicwidget.rdecorator = " "
+
+  -- Set all the servers to work with (here can be any servers you use)
+  musicwidget.servers = {
+     { server = "localhost",
+          port = 6600 },
+     { server = "192.168.0.72",
+          port = 6600 }
+  }
+
+  -- Set the buttons of the widget. Keyboard keys are working in the
+  -- entire Awesome environment. Also look at the line 352.
+  musicwidget:register_buttons({ { "", awesompd.MOUSE_LEFT, musicwidget:command_playpause() },
+     			       { "Control", awesompd.MOUSE_SCROLL_UP, musicwidget:command_prev_track() },
+  			       { "Control", awesompd.MOUSE_SCROLL_DOWN, musicwidget:command_next_track() },
+  			       { "", awesompd.MOUSE_SCROLL_UP, musicwidget:command_volume_up() },
+  			       { "", awesompd.MOUSE_SCROLL_DOWN, musicwidget:command_volume_down() },
+  			       { "", awesompd.MOUSE_RIGHT, musicwidget:command_show_menu() },
+                               { "", "XF86AudioLowerVolume", musicwidget:command_volume_down() },
+                               { "", "XF86AudioRaiseVolume", musicwidget:command_volume_up() },
+                               { modkey, "Pause", musicwidget:command_playpause() } })
+
+  musicwidget:run() -- After all configuration is done, run the widget
+
+-- END OF AWESOMPD WIDGET DECLARATION
+-- Don't forget to add the widget to the wibox. It is done on the line 216.
+
 mywibox = {}
 mypromptbox = {}
 mylayoutbox = {}
@@ -121,17 +159,11 @@ mytaglist.buttons = awful.util.table.join(
 mytasklist = {}
 mytasklist.buttons = awful.util.table.join(
                      awful.button({ }, 1, function (c)
-                                              if c == client.focus then
-                                                  c.minimized = true
-                                              else
-                                                  if not c:isvisible() then
-                                                      awful.tag.viewonly(c:tags()[1])
-                                                  end
-                                                  -- This will also un-minimize
-                                                  -- the client, if needed
-                                                  client.focus = c
-                                                  c:raise()
+                                              if not c:isvisible() then
+                                                  awful.tag.viewonly(c:tags()[1])
                                               end
+                                              client.focus = c
+                                              c:raise()
                                           end),
                      awful.button({ }, 3, function ()
                                               if instance then
@@ -149,48 +181,6 @@ mytasklist.buttons = awful.util.table.join(
                                               awful.client.focus.byidx(-1)
                                               if client.focus then client.focus:raise() end
                                           end))
-
-
-  musicwidget = awesompd:create() -- Create awesompd widget
-  musicwidget.font = "Liberation Mono" -- Set widget font 
-  musicwidget.scrolling = true -- If true, the text in the widget will be scrolled
-  musicwidget.output_size = 30 -- Set the size of widget in symbols
-  musicwidget.update_interval = 10 -- Set the update interval in seconds
-  -- Set the folder where icons are located (change username to your login name)
-  musicwidget.path_to_icons = "/home/reox/.config/awesome/awesompd/icons" 
-  -- Set the default music format for Jamendo streams. You can change
-  -- this option on the fly in awesompd itself.
-  -- possible formats: awesompd.FORMAT_MP3, awesompd.FORMAT_OGG
-  musicwidget.jamendo_format = awesompd.FORMAT_MP3
-  -- If true, song notifications for Jamendo tracks and local tracks will also contain
-  -- album cover image.
-  musicwidget.show_album_cover = true
-  -- Specify how big in pixels should an album cover be. Maximum value
-  -- is 100.
-  musicwidget.album_cover_size = 50
-  -- Specify decorators on the left and the right side of the
-  -- widget. Or just leave empty strings if you decorate the widget
-  -- from outside.
-  musicwidget.ldecorator = " "
-  musicwidget.rdecorator = " "
-  -- Set all the servers to work with (here can be any servers you use)
-  musicwidget.servers = {
-     { server = "127.0.0.1",
-          port = 6600 },
-     { server = "10.20.30.40",
-          port = 6600 },
-  }
-  -- Set the buttons of the widget
-  musicwidget:register_buttons({ { "", awesompd.MOUSE_LEFT, musicwidget:command_toggle() },
-      			       { "Control", awesompd.MOUSE_SCROLL_UP, musicwidget:command_prev_track() },
- 			       { "Control", awesompd.MOUSE_SCROLL_DOWN, musicwidget:command_next_track() },
- 			       { "", awesompd.MOUSE_SCROLL_UP, musicwidget:command_volume_up() },
- 			       { "", awesompd.MOUSE_SCROLL_DOWN, musicwidget:command_volume_down() },
- 			       { "", awesompd.MOUSE_RIGHT, musicwidget:command_show_menu() },
-                               { "", "XF86AudioLowerVolume", musicwidget:command_volume_down() },
-                               { "", "XF86AudioRaiseVolume", musicwidget:command_volume_up() },
-                               { modkey, "Pause", musicwidget:command_playpause() } })
-  musicwidget:run() -- After all configuration is done, run the widget
 
 for s = 1, screen.count() do
     -- Create a promptbox for each screen
@@ -211,23 +201,6 @@ for s = 1, screen.count() do
                                               return awful.widget.tasklist.label.currenttags(c, s)
                                           end, mytasklist.buttons)
 
-	-- RAM Widget
-	memwidget = widget({ type = "textbox" })
-	vicious.register(memwidget, vicious.widgets.mem, "[ RAM $1% ]", 20)
-	-- BAT Widget
-	batwidget_bat1 = widget({ type = "textbox" })
-	batwidget_time = widget({ type = "textbox" })
-	ipwidget = widget({ type = "textbox" })
-	dnswidget = widget({ type = "textbox" })
-	backupwidget = widget({ type = "textbox" })
-
-	vicious.register(batwidget_bat1, vicious.widgets.bat, "[ BAT $1 $2% ", 30, "BAT0")
-	vicious.register(batwidget_time, function() return awful.util.pread("/home/reox/git/localbin/battery_remaining.sh") end, " $2$1 ", 10)
-	vicious.register(ipwidget, function() return awful.util.pread("/home/reox/git/localbin/getAllIPs.sh") end, "$1 ", 30)
-	vicious.register(dnswidget, function() return awful.util.pread("/home/reox/git/localbin/dnsscript.sh") end, "$1 ", 30)
-	vicious.register(backupwidget, function() return awful.util.pread("/home/reox/git/localbin/backup-status") end, "$1 ", 30)
-
-
     -- Create the wibox
     mywibox[s] = awful.wibox({ position = "top", screen = s })
     -- Add widgets to the wibox - order matters
@@ -240,25 +213,11 @@ for s = 1, screen.count() do
         },
         mylayoutbox[s],
         mytextclock,
+	musicwidget.widget, -- Awesompd widget is added like this
         s == 1 and mysystray or nil,
         mytasklist[s],
         layout = awful.widget.layout.horizontal.rightleft
     }
-
-    -- Create the wibox
-    botwibox = awful.wibox({ position = "bottom", screen = s })
-    botwibox.widgets = {
-		memwidget,
-		batwidget_time,
-		batwidget_bat2,
-		batwidget_bat1,
-		ipwidget,
-		dnswidget,
-		backupwidget,
-		musicwidget.widget,
-        layout = awful.widget.layout.horizontal.rightleft
-    }
-
 end
 -- }}}
 
@@ -304,14 +263,6 @@ globalkeys = awful.util.table.join(
 
     -- Standard program
     awful.key({ modkey,           }, "Return", function () awful.util.spawn(terminal) end),
-	awful.key({ modkey,           }, "L"     , function () awful.util.spawn("slock") end),
-	awful.key({ Button3,                  }, "Print",  function () awful.util.spawn("scrot", false) end),
-	-- awful.key({ "Shift"           }, "Print",  function () awful.util.spawn("scrot -s -e 'mv $f ~/screenshots/ 2>/dev/null'") end),
-	-- Audio
-	awful.key({			    	  }, "#121", 		function () awful.util.spawn("volume mute", false) end),
-	awful.key({					  }, "#122", 		function () awful.util.spawn("volume voldown", false) end),
-	awful.key({					  }, "#123",	  	function () awful.util.spawn("volume volup", false) end),
-
     awful.key({ modkey, "Control" }, "r", awesome.restart),
     awful.key({ modkey, "Shift"   }, "q", awesome.quit),
 
@@ -324,8 +275,6 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey,           }, "space", function () awful.layout.inc(layouts,  1) end),
     awful.key({ modkey, "Shift"   }, "space", function () awful.layout.inc(layouts, -1) end),
 
-    awful.key({ modkey, "Control" }, "n", awful.client.restore),
-
     -- Prompt
     awful.key({ modkey },            "r",     function () mypromptbox[mouse.screen]:run() end),
 
@@ -336,7 +285,6 @@ globalkeys = awful.util.table.join(
                   awful.util.eval, nil,
                   awful.util.getdir("cache") .. "/history_eval")
               end)
-
 )
 
 clientkeys = awful.util.table.join(
@@ -347,12 +295,7 @@ clientkeys = awful.util.table.join(
     awful.key({ modkey,           }, "o",      awful.client.movetoscreen                        ),
     awful.key({ modkey, "Shift"   }, "r",      function (c) c:redraw()                       end),
     awful.key({ modkey,           }, "t",      function (c) c.ontop = not c.ontop            end),
-    awful.key({ modkey,           }, "n",
-        function (c)
-            -- The client currently has the input focus, so it cannot be
-            -- minimized, since minimized clients can't have the focus.
-            c.minimized = true
-        end),
+    awful.key({ modkey,           }, "n",      function (c) c.minimized = not c.minimized    end),
     awful.key({ modkey,           }, "m",
         function (c)
             c.maximized_horizontal = not c.maximized_horizontal
@@ -405,6 +348,9 @@ clientbuttons = awful.util.table.join(
     awful.button({ modkey }, 3, awful.mouse.client.resize))
 
 -- Set keys
+-- Add this line before root.keys(globalkeys).
+musicwidget:append_global_keys()
+
 root.keys(globalkeys)
 -- }}}
 
@@ -423,23 +369,6 @@ awful.rules.rules = {
       properties = { floating = true } },
     { rule = { class = "gimp" },
       properties = { floating = true } },
-    { rule = { class = "keepassx" },
-      properties = { floating = true } },
-	-- set some windows
-	{ rule = { instance = "xterm" }, 
-	  properties = { tag = tags[1][1] } },
-	{ rule = { instance = "chromium" }, 
-	  properties = { tag = tags[1][2] } },
-	{ rule = { class = "Icedove" }, 
-	  properties = { tag = tags[1][3] } },
-	{ rule = { class = "Pidgin", role = "buddy_list" },
-	  properties = { tag = tags[1][4] },
-	  callback = awful.client.setslave
-	},
-	{ rule = { class = "Pidgin", role = "conversation" },
-	  properties = { tag = tags[1][4] },
-	},
-	 
     -- Set Firefox to always map on tags number 2 of screen 1.
     -- { rule = { class = "Firefox" },
     --   properties = { tag = tags[1][2] } },
@@ -475,61 +404,4 @@ end)
 
 client.add_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.add_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
--- }}}
-
-
--- {{{ autostart
-
-function run_once(prg, arg_string)
-    if not prg then
-        do return nil end
-    end
-
-    if not arg_string then 
-        awful.util.spawn_with_shell("pgrep -u $USER -x '" .. prg .. "' || (" .. prg .. ")")
-    else
-        awful.util.spawn_with_shell("pgrep -u $USER -x '" .. prg .. "' || (" .. prg .. " " .. arg_string .. ")")
-    end
-end
-
-run_once("chromium")
-run_once("pidgin")
-run_once("icedove")
--- two times xterm :)
-run_once("xterm")
---run_once("xterm")
-run_once("wicd-gtk --tray")
--- load calibration for monitor
-run_once("dispwin /home/reox/git/dispcal/2011-12-23_HIGH_Laptop.cal")
--- set the name of the window manager, should fix jdk problems
-run_once("wmname LG3D")
-run_once("dropboxd")
-
-
--- }}}
-
-
--- {{{ Widget stuff (naughty config)
-naughty.config.default_preset.timeout          = 5
-naughty.config.default_preset.screen           = 1
-naughty.config.default_preset.position         = "top_right"
-naughty.config.default_preset.margin           = 4
-naughty.config.default_preset.gap              = 1
-naughty.config.default_preset.ontop            = true
-naughty.config.default_preset.font             = beautiful.font or "Verdana 8"
-naughty.config.default_preset.icon             = nil
-naughty.config.default_preset.icon_size        = 16
-naughty.config.default_preset.fg               = beautiful.fg_focus or '#ffffff'
-naughty.config.default_preset.bg               = beautiful.bg_focus or '#535d6c'
-naughty.config.presets.normal.border_color     = beautiful.border_focus or '#535d6c'
-naughty.config.default_preset.border_width     = 1
-naughty.config.default_preset.hover_timeout    = nil
-
-naughty.config.presets.normal.icon_size        = 32
-naughty.config.presets.low.icon_size           = 32
-naughty.config.presets.critical.icon_size      = 32
-
-
-
-
 -- }}}
