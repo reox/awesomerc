@@ -252,8 +252,8 @@ for s = 1, screen.count() do
 		batwidget_time,
 		batwidget_bat2,
 		batwidget_bat1,
-		ipwidget,
 		dnswidget,
+		ipwidget,
 		backupwidget,
 		musicwidget.widget,
         layout = awful.widget.layout.horizontal.rightleft
