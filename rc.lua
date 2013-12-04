@@ -9,20 +9,20 @@ require("naughty")
 
 require("vicious")
 
+require("battery")
+
 
 -- Load Debian menu entries
 require("debian.menu")
 
-
-
-  require("awesompd/awesompd")
+-- require("awesompd/awesompd")
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, and wallpapers
 beautiful.init("/home/reox/.config/awesome/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
-terminal = "x-terminal-emulator"
+terminal = "xterm"
 editor = os.getenv("EDITOR") or "editor"
 editor_cmd = terminal .. " -e " .. editor
 
@@ -99,6 +99,7 @@ mylauncher = awful.widget.launcher({ image = image(beautiful.awesome_icon),
 -- }}}
 
 -- {{{ Wibox
+
 -- Create a textclock widget
 mytextclock = awful.widget.textclock({ align = "right" })
 
@@ -151,46 +152,46 @@ mytasklist.buttons = awful.util.table.join(
                                           end))
 
 
-  musicwidget = awesompd:create() -- Create awesompd widget
-  musicwidget.font = "Liberation Mono" -- Set widget font 
-  musicwidget.scrolling = true -- If true, the text in the widget will be scrolled
-  musicwidget.output_size = 30 -- Set the size of widget in symbols
-  musicwidget.update_interval = 10 -- Set the update interval in seconds
-  -- Set the folder where icons are located (change username to your login name)
-  musicwidget.path_to_icons = "/home/reox/.config/awesome/awesompd/icons" 
-  -- Set the default music format for Jamendo streams. You can change
-  -- this option on the fly in awesompd itself.
-  -- possible formats: awesompd.FORMAT_MP3, awesompd.FORMAT_OGG
-  musicwidget.jamendo_format = awesompd.FORMAT_MP3
-  -- If true, song notifications for Jamendo tracks and local tracks will also contain
-  -- album cover image.
-  musicwidget.show_album_cover = true
-  -- Specify how big in pixels should an album cover be. Maximum value
-  -- is 100.
-  musicwidget.album_cover_size = 50
-  -- Specify decorators on the left and the right side of the
-  -- widget. Or just leave empty strings if you decorate the widget
-  -- from outside.
-  musicwidget.ldecorator = " "
-  musicwidget.rdecorator = " "
-  -- Set all the servers to work with (here can be any servers you use)
-  musicwidget.servers = {
-     { server = "127.0.0.1",
-          port = 6600 },
-     { server = "10.20.30.40",
-          port = 6600 },
-  }
-  -- Set the buttons of the widget
-  musicwidget:register_buttons({ { "", awesompd.MOUSE_LEFT, musicwidget:command_toggle() },
-      			       { "Control", awesompd.MOUSE_SCROLL_UP, musicwidget:command_prev_track() },
- 			       { "Control", awesompd.MOUSE_SCROLL_DOWN, musicwidget:command_next_track() },
- 			       { "", awesompd.MOUSE_SCROLL_UP, musicwidget:command_volume_up() },
- 			       { "", awesompd.MOUSE_SCROLL_DOWN, musicwidget:command_volume_down() },
- 			       { "", awesompd.MOUSE_RIGHT, musicwidget:command_show_menu() },
-                               { "", "XF86AudioLowerVolume", musicwidget:command_volume_down() },
-                               { "", "XF86AudioRaiseVolume", musicwidget:command_volume_up() },
-                               { modkey, "Pause", musicwidget:command_playpause() } })
-  musicwidget:run() -- After all configuration is done, run the widget
+--   musicwidget = awesompd:create() -- Create awesompd widget
+--   musicwidget.font = "Liberation Mono" -- Set widget font 
+--   musicwidget.scrolling = true -- If true, the text in the widget will be scrolled
+--   musicwidget.output_size = 30 -- Set the size of widget in symbols
+--   musicwidget.update_interval = 10 -- Set the update interval in seconds
+--   -- Set the folder where icons are located (change username to your login name)
+--   musicwidget.path_to_icons = "/home/reox/.config/awesome/awesompd/icons" 
+--   -- Set the default music format for Jamendo streams. You can change
+--   -- this option on the fly in awesompd itself.
+--   -- possible formats: awesompd.FORMAT_MP3, awesompd.FORMAT_OGG
+--   musicwidget.jamendo_format = awesompd.FORMAT_MP3
+--   -- If true, song notifications for Jamendo tracks and local tracks will also contain
+--   -- album cover image.
+--   musicwidget.show_album_cover = true
+--   -- Specify how big in pixels should an album cover be. Maximum value
+--   -- is 100.
+--   musicwidget.album_cover_size = 50
+--   -- Specify decorators on the left and the right side of the
+--   -- widget. Or just leave empty strings if you decorate the widget
+--   -- from outside.
+--   musicwidget.ldecorator = " "
+--   musicwidget.rdecorator = " "
+--   -- Set all the servers to work with (here can be any servers you use)
+--   musicwidget.servers = {
+--      { server = "127.0.0.1",
+--           port = 6600 },
+--      { server = "10.20.30.40",
+--           port = 6600 },
+--   }
+--   -- Set the buttons of the widget
+--   musicwidget:register_buttons({ { "", awesompd.MOUSE_LEFT, musicwidget:command_toggle() },
+--       			       { "Control", awesompd.MOUSE_SCROLL_UP, musicwidget:command_prev_track() },
+--  			       { "Control", awesompd.MOUSE_SCROLL_DOWN, musicwidget:command_next_track() },
+--  			       { "", awesompd.MOUSE_SCROLL_UP, musicwidget:command_volume_up() },
+--  			       { "", awesompd.MOUSE_SCROLL_DOWN, musicwidget:command_volume_down() },
+--  			       { "", awesompd.MOUSE_RIGHT, musicwidget:command_show_menu() },
+--                                { "", "XF86AudioLowerVolume", musicwidget:command_volume_down() },
+--                                { "", "XF86AudioRaiseVolume", musicwidget:command_volume_up() },
+--                                { modkey, "Pause", musicwidget:command_playpause() } })
+--   musicwidget:run() -- After all configuration is done, run the widget
 
 for s = 1, screen.count() do
     -- Create a promptbox for each screen
@@ -215,17 +216,17 @@ for s = 1, screen.count() do
 	memwidget = widget({ type = "textbox" })
 	vicious.register(memwidget, vicious.widgets.mem, "[ RAM $1% ]", 20)
 	-- BAT Widget
-	batwidget_bat1 = widget({ type = "textbox" })
 	batwidget_time = widget({ type = "textbox" })
 	ipwidget = widget({ type = "textbox" })
 	dnswidget = widget({ type = "textbox" })
 	backupwidget = widget({ type = "textbox" })
 
-	vicious.register(batwidget_bat1, vicious.widgets.bat, "[ BAT $1 $2% ", 30, "BAT0")
-	vicious.register(batwidget_time, function() return awful.util.pread("/home/reox/git/localbin/battery_remaining.sh") end, " $2$1 ", 10)
 	vicious.register(ipwidget, function() return awful.util.pread("/home/reox/git/localbin/getAllIPs.sh") end, "$1 ", 30)
 	vicious.register(dnswidget, function() return awful.util.pread("/home/reox/git/localbin/dnsscript.sh") end, "$1 ", 30)
 	vicious.register(backupwidget, function() return awful.util.pread("/home/reox/git/localbin/backup-status") end, "$1 ", 30)
+
+    batterywidget = widget({type = "textbox", name = "batterywidget", align = "right" })
+
 
 
     -- Create the wibox
@@ -242,20 +243,18 @@ for s = 1, screen.count() do
         mytextclock,
         s == 1 and mysystray or nil,
         mytasklist[s],
-        layout = awful.widget.layout.horizontal.rightleft
+        layout = awful.widget.layout.horizontal.rightleft,
+
     }
 
     -- Create the wibox
     botwibox = awful.wibox({ position = "bottom", screen = s })
     botwibox.widgets = {
 		memwidget,
-		batwidget_time,
-		batwidget_bat2,
-		batwidget_bat1,
+        batterywidget,
 		dnswidget,
 		ipwidget,
 		backupwidget,
-		musicwidget.widget,
         layout = awful.widget.layout.horizontal.rightleft
     }
 
@@ -428,7 +427,7 @@ awful.rules.rules = {
 	-- set some windows
 	{ rule = { instance = "xterm" }, 
 	  properties = { tag = tags[1][1] } },
-	{ rule = { instance = "chromium" }, 
+	{ rule = { instance = "google-chrome" }, 
 	  properties = { tag = tags[1][2] } },
 	{ rule = { class = "Icedove" }, 
 	  properties = { tag = tags[1][3] } },
@@ -492,7 +491,13 @@ function run_once(prg, arg_string)
     end
 end
 
-run_once("chromium")
+-- gnome stuff
+run_once("/usr/lib/at-spi2-core/at-spi-bus-launcher --launch-immediately")
+run_once("/usr/lib/notification-daemon/notification-daemon")
+
+
+
+run_once("google-chrome")
 run_once("pidgin")
 run_once("icedove")
 -- two times xterm :)
@@ -529,7 +534,11 @@ naughty.config.presets.normal.icon_size        = 32
 naughty.config.presets.low.icon_size           = 32
 naughty.config.presets.critical.icon_size      = 32
 
-
-
+bat_clo = battery.batclosure("BAT0")
+batterywidget.text = bat_clo()
+battimer = timer({ timeout = 30 })
+battimer:add_signal("timeout", function() batterywidget.text = bat_clo() end)
+battimer:start()
 
 -- }}}
+
