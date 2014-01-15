@@ -429,7 +429,7 @@ awful.rules.rules = {
 	  properties = { tag = tags[1][1] } },
 	{ rule = { instance = "google-chrome" }, 
 	  properties = { tag = tags[1][2] } },
-	{ rule = { class = "Icedove" }, 
+	{ rule = { class = "evolution" }, 
 	  properties = { tag = tags[1][3] } },
 	{ rule = { class = "Pidgin", role = "buddy_list" },
 	  properties = { tag = tags[1][4] },
@@ -494,12 +494,14 @@ end
 -- gnome stuff
 run_once("/usr/lib/at-spi2-core/at-spi-bus-launcher --launch-immediately")
 run_once("/usr/lib/notification-daemon/notification-daemon")
+run_once("gnome-settings-daemon")
+run_once("gnome-keyring-daemon")
 
 
 
 run_once("google-chrome")
 run_once("pidgin")
-run_once("icedove")
+run_once("evolution")
 -- two times xterm :)
 run_once("xterm")
 --run_once("xterm")
@@ -509,6 +511,7 @@ run_once("dispwin /home/reox/git/dispcal/2011-12-23_HIGH_Laptop.cal")
 -- set the name of the window manager, should fix jdk problems
 run_once("wmname LG3D")
 run_once("dropboxd")
+run_once("synclient TouchPadOff=1")
 
 
 -- }}}
