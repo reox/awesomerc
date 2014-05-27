@@ -303,7 +303,7 @@ globalkeys = awful.util.table.join(
 
     -- Standard program
     awful.key({ modkey,           }, "Return", function () awful.util.spawn(terminal) end),
-	awful.key({ modkey,           }, "L"     , function () awful.util.spawn("slock") end),
+	awful.key({ modkey,          }, "j"     , function () awful.util.spawn("slock") end),
 	awful.key({ Button3,                  }, "Print",  function () awful.util.spawn("scrot", false) end),
 	-- awful.key({ "Shift"           }, "Print",  function () awful.util.spawn("scrot -s -e 'mv $f ~/screenshots/ 2>/dev/null'") end),
 	-- Audio
@@ -494,24 +494,20 @@ end
 -- gnome stuff
 run_once("/usr/lib/at-spi2-core/at-spi-bus-launcher --launch-immediately")
 run_once("/usr/lib/notification-daemon/notification-daemon")
-run_once("gnome-settings-daemon")
-run_once("gnome-keyring-daemon")
-
 
 
 run_once("google-chrome")
 run_once("pidgin")
-run_once("evolution")
--- two times xterm :)
 run_once("xterm")
 --run_once("xterm")
 run_once("wicd-gtk --tray")
 -- load calibration for monitor
-run_once("dispwin /home/reox/git/dispcal/2011-12-23_HIGH_Laptop.cal")
+-- run_once("dispwin /home/reox/git/dispcal/2011-12-23_HIGH_Laptop.cal")
 -- set the name of the window manager, should fix jdk problems
 run_once("wmname LG3D")
 run_once("dropboxd")
 run_once("synclient TouchPadOff=1")
+run_once("~/.config/awesome/run_once.sh")
 
 
 -- }}}
