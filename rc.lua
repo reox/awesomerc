@@ -427,7 +427,7 @@ awful.rules.rules = {
 	-- set some windows
 	{ rule = { instance = "xterm" }, 
 	  properties = { tag = tags[1][1] } },
-	{ rule = { instance = "google-chrome" }, 
+	{ rule = { instance = "firefox" }, 
 	  properties = { tag = tags[1][2] } },
 	{ rule = { class = "evolution" }, 
 	  properties = { tag = tags[1][3] } },
@@ -496,7 +496,7 @@ run_once("/usr/lib/at-spi2-core/at-spi-bus-launcher --launch-immediately")
 run_once("/usr/lib/notification-daemon/notification-daemon")
 
 
-run_once("google-chrome")
+run_once("/opt/firefox/firefox")
 run_once("pidgin")
 run_once("xterm")
 --run_once("xterm")
@@ -505,7 +505,7 @@ run_once("wicd-gtk --tray")
 -- run_once("dispwin /home/reox/git/dispcal/2011-12-23_HIGH_Laptop.cal")
 -- set the name of the window manager, should fix jdk problems
 run_once("wmname LG3D")
-run_once("dropboxd")
+run_once("dropbox start")
 run_once("synclient TouchPadOff=1")
 run_once("~/.config/awesome/run_once.sh")
 
