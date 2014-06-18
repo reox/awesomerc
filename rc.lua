@@ -304,7 +304,7 @@ globalkeys = awful.util.table.join(
     -- Standard program
     awful.key({ modkey,           }, "Return", function () awful.util.spawn(terminal) end),
 	awful.key({ modkey,          }, "j"     , function () awful.util.spawn("slock") end),
-	awful.key({ Button3,                  }, "Print",  function () awful.util.spawn("scrot", false) end),
+	awful.key({ Button3,                  }, "Print",  function () awful.util.spawn("scrot -e 'mv $f ~/data/pictures/screenshots/'", false) end),
 	-- awful.key({ "Shift"           }, "Print",  function () awful.util.spawn("scrot -s -e 'mv $f ~/screenshots/ 2>/dev/null'") end),
 	-- Audio
 	awful.key({			    	  }, "#121", 		function () awful.util.spawn("volume mute", false) end),
