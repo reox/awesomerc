@@ -505,7 +505,7 @@ run_once("wicd-gtk --tray")
 -- run_once("dispwin /home/reox/git/dispcal/2011-12-23_HIGH_Laptop.cal")
 -- set the name of the window manager, should fix jdk problems
 run_once("wmname LG3D")
-run_once("dropbox start")
+run_once("btsync start")
 run_once("synclient TouchPadOff=1")
 run_once("~/.config/awesome/run_once.sh")
 
