@@ -500,17 +500,18 @@ run_once("/opt/firefox/firefox")
 run_once("pidgin")
 run_once("xterm")
 run_once("xterm -e mutt")
+-- this might be a hack but now we can really run it once
+run_once("/usr/bin/python -O /usr/share/wicd/gtk/wicd-client.py --tray")
 -- load calibration for monitor
 -- run_once("dispwin /home/reox/git/dispcal/2011-12-23_HIGH_Laptop.cal")
 
--- TODO these scripts will start all over because pgrep cant grep them...
-run_once("wicd-gtk --tray")
-run_once("btsync start")
 
+-- These programs don't care if they are started all over again
 -- set the name of the window manager, should fix jdk problems
 run_once("wmname LG3D")
 run_once("synclient TouchPadOff=1")
 run_once("~/.config/awesome/run_once.sh")
+run_once("btsync start")
 
 
 -- }}}
