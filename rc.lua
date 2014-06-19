@@ -410,6 +410,9 @@ root.keys(globalkeys)
 -- {{{ Rules
 awful.rules.rules = {
     -- All clients will match this rule.
+    -- You can check what need to put into the rule by using "xprop"
+    -- e.g. use class if WM_CLASS is present or instance for extact WM_COMMAND
+    -- or name for WM_NAME
     { rule = { },
       properties = { border_width = beautiful.border_width,
                      border_color = beautiful.border_normal,
@@ -423,25 +426,22 @@ awful.rules.rules = {
     { rule = { class = "gimp" },
       properties = { floating = true } },
     { rule = { class = "keepassx" },
-      properties = { floating = true } },
-	-- set some windows
-	{ rule = { instance = "xterm" }, 
-	  properties = { tag = tags[1][1] } },
-	{ rule = { instance = "firefox" }, 
-	  properties = { tag = tags[1][2] } },
-	{ rule = { class = "evolution" }, 
+      properties = { floating = true , width = 700, height = 400 } },
+      -- move windows to specific tags
+      -- if a mail client is present, move to tag 3
+      -- use $(xterm -e mutt) to start 
+	{ rule = { instance = "xterm" , name = "mutt"}, 
 	  properties = { tag = tags[1][3] } },
+      -- browser should stay in number 2
+	{ rule = { class = "Firefox" }, 
+	  properties = { tag = tags[1][2] } },
+      -- some pidgin stuff, buddy list should be slaved
 	{ rule = { class = "Pidgin", role = "buddy_list" },
 	  properties = { tag = tags[1][4] },
-	  callback = awful.client.setslave
-	},
+	  callback = awful.client.setslave },
 	{ rule = { class = "Pidgin", role = "conversation" },
-	  properties = { tag = tags[1][4] },
-	},
+	  properties = { tag = tags[1][4] } },
 	 
-    -- Set Firefox to always map on tags number 2 of screen 1.
-    -- { rule = { class = "Firefox" },
-    --   properties = { tag = tags[1][2] } },
 }
 -- }}}
 
@@ -485,27 +485,30 @@ function run_once(prg, arg_string)
     end
 
     if not arg_string then 
-        awful.util.spawn_with_shell("pgrep -u $USER -x '" .. prg .. "' || (" .. prg .. ")")
+        awful.util.spawn_with_shell("pgrep -u $USER -f -x '" .. prg .. "' || (" .. prg .. ")")
     else
-        awful.util.spawn_with_shell("pgrep -u $USER -x '" .. prg .. "' || (" .. prg .. " " .. arg_string .. ")")
+        awful.util.spawn_with_shell("pgrep -u $USER -f -x '" .. prg .. "' || (" .. prg .. " " .. arg_string .. ")")
     end
 end
 
 -- gnome stuff
-run_once("/usr/lib/at-spi2-core/at-spi-bus-launcher --launch-immediately")
-run_once("/usr/lib/notification-daemon/notification-daemon")
+-- run_once("/usr/lib/at-spi2-core/at-spi-bus-launcher --launch-immediately")
+-- run_once("/usr/lib/notification-daemon/notification-daemon")
 
 
 run_once("/opt/firefox/firefox")
 run_once("pidgin")
 run_once("xterm")
---run_once("xterm")
-run_once("wicd-gtk --tray")
+run_once("xterm -e mutt")
 -- load calibration for monitor
 -- run_once("dispwin /home/reox/git/dispcal/2011-12-23_HIGH_Laptop.cal")
+
+-- TODO these scripts will start all over because pgrep cant grep them...
+run_once("wicd-gtk --tray")
+run_once("btsync start")
+
 -- set the name of the window manager, should fix jdk problems
 run_once("wmname LG3D")
-run_once("btsync start")
 run_once("synclient TouchPadOff=1")
 run_once("~/.config/awesome/run_once.sh")
 
