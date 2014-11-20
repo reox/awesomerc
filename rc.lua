@@ -218,11 +218,11 @@ for s = 1, screen.count() do
 	-- BAT Widget
 	batwidget_time = widget({ type = "textbox" })
 	ipwidget = widget({ type = "textbox" })
-	dnswidget = widget({ type = "textbox" })
+    -- dnswidget = widget({ type = "textbox" })
 	backupwidget = widget({ type = "textbox" })
 
 	vicious.register(ipwidget, function() return awful.util.pread("/home/reox/git/localbin/getAllIPs.sh") end, "$1 ", 30)
-	vicious.register(dnswidget, function() return awful.util.pread("/home/reox/git/localbin/dnsscript.sh") end, "$1 ", 30)
+	-- vicious.register(dnswidget, function() return awful.util.pread("/home/reox/git/localbin/dnsscript.sh") end, "$1 ", 30)
 	vicious.register(backupwidget, function() return awful.util.pread("/home/reox/git/localbin/backup-status") end, "$1 ", 30)
 
     batterywidget = widget({type = "textbox", name = "batterywidget", align = "right" })
@@ -252,9 +252,9 @@ for s = 1, screen.count() do
     botwibox.widgets = {
 		memwidget,
         batterywidget,
-		dnswidget,
-		ipwidget,
 		backupwidget,
+		-- dnswidget,
+		ipwidget,
         layout = awful.widget.layout.horizontal.rightleft
     }
 
@@ -511,7 +511,6 @@ run_once("/usr/bin/python -O /usr/share/wicd/gtk/wicd-client.py --tray")
 run_once("wmname LG3D")
 run_once("synclient TouchPadOff=1")
 run_once("~/.config/awesome/run_once.sh")
-run_once("btsync start")
 
 
 -- }}}
