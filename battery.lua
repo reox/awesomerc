@@ -41,9 +41,11 @@ function get_bat_state (adapter)
     facp:close()
     local battery = math.floor(cur * 100 / cap)
     local idx = -1 
+    local time = "zero rate" 
     if sta:match("Charging") then
         dir = 1
         idx = acp:find('until')
+
     elseif sta:match("Discharging") then
         dir = -1
         idx = acp:find('remaining')
@@ -51,7 +53,14 @@ function get_bat_state (adapter)
         dir = 0
         battery = ""
     end
-    local time = acp:sub(idx - 8, idx - 5)
+    -- there is this message: Battery 0: Charging, 99%, charging at zero rate -
+    -- will never fully charge.
+    if idx ~= nil then
+        time = acp:sub(idx - 9, idx - 2)
+    else
+        dir = 0
+        battery = ""
+    end
     return battery, dir, time
 end
 
@@ -74,11 +83,10 @@ end
 function batclosure (adapter)
     local nextlim = limits[1][1]
     return function ()
-        local prefix = "⚡"
+        local prefix = "Battery: "
         local battery, dir, time = get_bat_state(adapter)
         if dir == -1 then
             dirsign = "↓"
-            prefix = "Bat: "
             prefix = prefix .. time
             local to = 30 - battery
             if battery <= nextlim then
@@ -93,11 +101,16 @@ function batclosure (adapter)
             end
         elseif dir == 1 then
             dirsign = "↑"
+            prefix = prefix .. time
             nextlim = limits[1][1]
         else
             dirsign = "FULL"
         end
         if dir ~= 0 then battery = battery.."%" end
-        return "[ "..prefix.." "..dirsign..battery..dirsign.." ]"
+        if dir == 0 then
+            return "[ "..prefix.." "..dirsign.." ]"
+        else
+            return "[ "..prefix.." "..dirsign..battery..dirsign.." ]"
+        end
     end
 end

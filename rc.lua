@@ -303,7 +303,11 @@ globalkeys = awful.util.table.join(
 
     -- Standard program
     awful.key({ modkey,           }, "Return", function () awful.util.spawn(terminal) end),
-	awful.key({ modkey,          }, "j"     , function () awful.util.spawn("slock") end),
+    awful.key({ modkey, "Control" }, "l",
+              function ()
+                    awful.util.spawn("sync")
+                  awful.util.spawn("xautolock -locknow")
+            end),
 	awful.key({ Button3,                  }, "Print",  function () awful.util.spawn("scrot -e 'mv $f ~/data/pictures/screenshots/'", false) end),
 	-- awful.key({ "Shift"           }, "Print",  function () awful.util.spawn("scrot -s -e 'mv $f ~/screenshots/ 2>/dev/null'") end),
 	-- Audio
@@ -427,6 +431,8 @@ awful.rules.rules = {
       properties = { floating = true } },
     { rule = { class = "keepassx" },
       properties = { floating = true , width = 700, height = 400 } },
+
+    { rule = { name = "Wicd Network Manager" }, properties = { floating = true } },
       -- move windows to specific tags
       -- if a mail client is present, move to tag 3
       -- use $(xterm -e mutt) to start 
@@ -512,6 +518,8 @@ run_once("wmname LG3D")
 run_once("synclient TouchPadOff=1")
 run_once("~/.config/awesome/run_once.sh")
 
+awful.util.spawn_with_shell('~/.config/awesome/locker.sh')
+
 
 -- }}}
 
@@ -538,7 +546,7 @@ naughty.config.presets.critical.icon_size      = 32
 
 bat_clo = battery.batclosure("BAT0")
 batterywidget.text = bat_clo()
-battimer = timer({ timeout = 30 })
+battimer = timer({ timeout = 5 })
 battimer:add_signal("timeout", function() batterywidget.text = bat_clo() end)
 battimer:start()
 
